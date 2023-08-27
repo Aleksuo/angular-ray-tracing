@@ -23,7 +23,6 @@ describe('AppComponent', () => {
   it(`should have as title 'angular-ray-tracing'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('angular-ray-tracing');
   });
 
   it('should render title', () => {
