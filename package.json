@@ -7,7 +7,9 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "lint": "ng lint && prettier --check .",
+    "lint-fix": "ng lint --fix && prettier --write ."
   },
   "private": true,
   "dependencies": {
@@ -19,15 +21,25 @@
     "@angular/platform-browser": "^16.2.2",
     "@angular/platform-browser-dynamic": "^16.2.2",
     "@angular/router": "^16.2.2",
+    "eslint-config-airbnb-typescript": "^17.1.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.13.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^16.2.0",
+    "@angular-eslint/builder": "16.1.2",
+    "@angular-eslint/eslint-plugin": "16.1.2",
+    "@angular-eslint/eslint-plugin-template": "16.1.2",
+    "@angular-eslint/schematics": "16.1.2",
+    "@angular-eslint/template-parser": "16.1.2",
     "@angular/cli": "~16.2.0",
     "@angular/compiler-cli": "^16.2.2",
     "@types/jasmine": "~4.3.0",
+    "@typescript-eslint/eslint-plugin": "5.62.0",
+    "@typescript-eslint/parser": "5.62.0",
+    "eslint": "^8.47.0",
+    "eslint-config-prettier": "^9.0.0",
     "husky": "^8.0.0",
     "jasmine-core": "~4.5.0",
     "karma": "~6.4.0",
@@ -40,6 +52,9 @@
     "typescript": "~5.1.6"
   },
   "lint-staged": {
+    "*.{js,ts,html}": [
+      "eslint --fix"
+    ],
     "*": [
       "prettier --write --ignore-unknown"
     ]

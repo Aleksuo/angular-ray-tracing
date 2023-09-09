@@ -4,6 +4,7 @@ import { Vec3Utils } from '../utils/vec3.utils';
 
 export class Ray {
   origin: Point3;
+
   direction: Vec3;
 
   constructor(origin: Point3, direction: Vec3) {

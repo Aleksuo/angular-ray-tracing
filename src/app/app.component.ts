@@ -13,6 +13,7 @@ export class AppComponent implements AfterViewInit {
   context: CanvasRenderingContext2D | null = null;
 
   image_width = 256;
+
   image_height = 256;
 
   ngAfterViewInit(): void {
@@ -22,8 +23,8 @@ export class AppComponent implements AfterViewInit {
       this.context.canvas.height = this.image_height;
 
       const imgData = new ImageData(this.image_width, this.image_height);
-      for (let i = 0; i < this.image_height; i++) {
-        for (let j = 0; j < this.image_width; j++) {
+      for (let i = 0; i < this.image_height; i += 1) {
+        for (let j = 0; j < this.image_width; j += 1) {
           const index = (i * this.image_width + j) * 4;
           imgData.data[index] = 255;
           imgData.data[index + 1] = 0;
