@@ -11,34 +11,24 @@ export class Vec3 {
     this.z = z;
   }
 
-  add(v: Vec3): void {
-    this.x += v.x;
-    this.y += v.y;
-    this.z += v.z;
+  add(v: Vec3): Vec3 {
+    return new Vec3(this.x + v.x, this.y + v.y, this.z + v.z);
   }
 
-  subtract(v: Vec3): void {
-    this.x -= v.x;
-    this.y -= v.y;
-    this.z -= v.z;
+  subtract(v: Vec3): Vec3 {
+    return new Vec3(this.x - v.x, this.y - v.y, this.z - v.z);
   }
 
-  multiply(num: number): void {
-    this.x *= num;
-    this.y *= num;
-    this.z *= num;
+  multiply(num: number): Vec3 {
+    return new Vec3(this.x * num, this.y * num, this.z * num);
   }
 
-  divide(num: number): void {
-    this.x /= num;
-    this.y /= num;
-    this.z /= num;
+  divide(num: number): Vec3 {
+    return new Vec3(this.x / num, this.y / num, this.z / num);
   }
 
-  negate(): void {
-    this.x = -this.x;
-    this.y = -this.y;
-    this.z = -this.z;
+  negate(): Vec3 {
+    return new Vec3(-this.x, -this.y, -this.z);
   }
 
   length(): number {
