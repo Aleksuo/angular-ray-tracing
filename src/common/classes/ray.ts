@@ -6,7 +6,7 @@ export class Ray {
 
   direction: Vec3;
 
-  constructor(origin: Point3, direction: Vec3) {
+  constructor(origin = new Vec3(), direction = new Vec3()) {
     this.origin = origin;
     this.direction = direction;
   }

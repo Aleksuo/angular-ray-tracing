@@ -1,4 +1,5 @@
 import { IHitRecord } from '../interfaces/hit-record.interface';
+import { IMaterial } from '../interfaces/material.interface';
 import { Ray } from './ray';
 import { Vec3 } from './vec3';
 
@@ -10,6 +11,8 @@ export class HitRecord implements IHitRecord {
   t: number;
 
   frontFace: boolean;
+
+  material!: IMaterial;
 
   constructor() {
     this.p = new Vec3();

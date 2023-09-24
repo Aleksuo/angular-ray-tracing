@@ -92,12 +92,14 @@ export class RayTracingCamera implements ICamera<ImageData> {
     if (
       world.hit(ray, new Interval(0.001, Number.POSITIVE_INFINITY), hitRecord)
     ) {
-      const direction = hitRecord.normal.add(Vec3.randomUnitVector());
-      return this.rayColor(
-        new Ray(hitRecord.p, direction),
-        world,
-        depth - 1,
-      ).multiply(0.5);
+      const scattered = new Ray();
+      const attenuation = new Vec3();
+      if (hitRecord.material.scatter(ray, hitRecord, attenuation, scattered)) {
+        return attenuation.vectorMultiply(
+          this.rayColor(scattered, world, depth - 1),
+        );
+      }
+      return new Vec3(0, 0, 0);
     }
 
     const unitDirection = ray.direction.unitVector();

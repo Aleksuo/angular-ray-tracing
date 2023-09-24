@@ -21,6 +21,10 @@ export class Vec3 {
     return new Vec3(this.x - v.x, this.y - v.y, this.z - v.z);
   }
 
+  vectorMultiply(v: Vec3): Vec3 {
+    return new Vec3(this.x * v.x, this.y * v.y, this.z * v.z);
+  }
+
   multiply(num: number): Vec3 {
     return new Vec3(this.x * num, this.y * num, this.z * num);
   }
@@ -49,11 +53,17 @@ export class Vec3 {
     return this.divide(this.length());
   }
 
+  nearZero(): boolean {
+    const s = 1e-8;
+    return Math.abs(this.x) < s && Math.abs(this.y) < s && Math.abs(this.z) < s;
+  }
+
   static randomUnitVector(): Vec3 {
     return Vec3.randomInUnitSphere().unitVector();
   }
 
   static randomInUnitSphere(): Vec3 {
+    // eslint-disable-next-line no-constant-condition
     while (true) {
       const p = Vec3.random(-1, 1);
       if (p.lengthSquared() < 1) return p;
@@ -74,5 +84,9 @@ export class Vec3 {
       randomRange(min, max),
       randomRange(min, max),
     );
+  }
+
+  static reflect(v: Vec3, n: Vec3): Vec3 {
+    return v.subtract(n.multiply(v.dot(n) * 2));
   }
 }
