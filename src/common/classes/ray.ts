@@ -1,6 +1,5 @@
 import { Point3 } from '../types/vec3.types';
 import { Vec3 } from './vec3';
-import { Vec3Utils } from '../utils/vec3.utils';
 
 export class Ray {
   origin: Point3;
@@ -13,6 +12,6 @@ export class Ray {
   }
 
   at(t: number): Point3 {
-    return Vec3Utils.add(this.origin, Vec3Utils.multiply(t, this.direction));
+    return this.direction.multiply(t).add(this.origin);
   }
 }

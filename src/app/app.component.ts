@@ -11,7 +11,6 @@ import { Sphere } from 'src/common/classes/sphere';
 import { Vec3 } from 'src/common/classes/vec3';
 import { IHitRecord } from 'src/common/interfaces/hit-record.interface';
 import { Color, Point3 } from 'src/common/types/vec3.types';
-import { Vec3Utils } from 'src/common/utils/vec3.utils';
 import { HitRecord } from 'src/common/classes/hit-record';
 import { Interval } from 'src/common/classes/interval';
 
@@ -133,7 +132,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         .multiply(255);
     }
 
-    const unitDirection = Vec3Utils.unitVector(ray.direction);
+    const unitDirection = ray.direction.unitVector();
     const a = 0.5 * (unitDirection.y + 1.0);
 
     return new Vec3(1.0, 1.0, 1.0)
