@@ -89,4 +89,13 @@ export class Vec3 {
   static reflect(v: Vec3, n: Vec3): Vec3 {
     return v.subtract(n.multiply(v.dot(n) * 2));
   }
+
+  static refract(uv: Vec3, n: Vec3, etaiOverEtat: number): Vec3 {
+    const cosTheta = Math.min(uv.negate().dot(n), 1);
+    const routPerp = uv.add(n.multiply(cosTheta)).multiply(etaiOverEtat);
+    const routParallel = n.multiply(
+      -Math.sqrt(Math.abs(1 - routPerp.lengthSquared())),
+    );
+    return routPerp.add(routParallel);
+  }
 }

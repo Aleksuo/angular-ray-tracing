@@ -14,9 +14,9 @@ export class RayTracingCamera implements ICamera<ImageData> {
 
   imageHeight!: number;
 
-  samplesPerPixel: number = 1;
+  samplesPerPixel: number = 50;
 
-  maxDepth: number = 10;
+  maxDepth: number = 50;
 
   private center!: Point3;
 

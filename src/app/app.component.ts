@@ -12,6 +12,7 @@ import { RayTracingCamera } from 'src/common/classes/ray-tracing-camera';
 import { ICamera } from 'src/common/interfaces/camera.interfce';
 import { Lambertian } from 'src/common/classes/lambertian';
 import { Metal } from 'src/common/classes/metal';
+import { Dielectric } from 'src/common/classes/dielectric';
 
 @Component({
   selector: 'app-root',
@@ -40,13 +41,13 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.world = new HittableList();
 
     const materialGround = new Lambertian(new Vec3(0.8, 0.8, 0.0));
-    const materialCenter = new Lambertian(new Vec3(0.7, 0.3, 0.3));
-    const materialLeft = new Metal(new Vec3(0.8, 0.8, 0.8), 0.3);
+    const materialCenter = new Lambertian(new Vec3(0.1, 0.2, 0.5));
+    const materialLeft = new Dielectric(1.5);
     const materialRight = new Metal(new Vec3(0.8, 0.6, 0.2), 1.0);
 
     this.world.add(new Sphere(new Vec3(0, 0, -1), 0.5, materialCenter));
     this.world.add(new Sphere(new Vec3(0, -100.5, -1), 100, materialGround));
-    this.world.add(new Sphere(new Vec3(-1, 0, -1), 0.5, materialLeft));
+    this.world.add(new Sphere(new Vec3(-1, 0, -1), -0.4, materialLeft));
     this.world.add(new Sphere(new Vec3(1, 0, -1), 0.5, materialRight));
   }
 
