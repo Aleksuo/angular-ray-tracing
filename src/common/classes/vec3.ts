@@ -1,3 +1,5 @@
+import { randomRange } from '../utilities/math.util';
+
 export class Vec3 {
   x: number;
 
@@ -45,5 +47,32 @@ export class Vec3 {
 
   unitVector(): Vec3 {
     return this.divide(this.length());
+  }
+
+  static randomUnitVector(): Vec3 {
+    return Vec3.randomInUnitSphere().unitVector();
+  }
+
+  static randomInUnitSphere(): Vec3 {
+    while (true) {
+      const p = Vec3.random(-1, 1);
+      if (p.lengthSquared() < 1) return p;
+    }
+  }
+
+  static randomOnHemisphere(normal: Vec3): Vec3 {
+    const onUnitSphere = Vec3.randomUnitVector();
+    if (onUnitSphere.dot(normal) > 0) {
+      return onUnitSphere;
+    }
+    return onUnitSphere.negate();
+  }
+
+  static random(min = 0, max = 1): Vec3 {
+    return new Vec3(
+      randomRange(min, max),
+      randomRange(min, max),
+      randomRange(min, max),
+    );
   }
 }

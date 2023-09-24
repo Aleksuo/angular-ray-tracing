@@ -16,6 +16,8 @@ export class RayTracingCamera implements ICamera<ImageData> {
 
   samplesPerPixel: number = 1;
 
+  maxDepth: number = 10;
+
   private center!: Point3;
 
   private pixel00Location!: Point3;
@@ -25,6 +27,8 @@ export class RayTracingCamera implements ICamera<ImageData> {
   private pixelDeltaV!: Vec3;
 
   private imgData!: ImageData;
+
+  private intensity: Interval = new Interval(0, 0.999);
 
   initialize(): void {
     this.imageHeight = Math.floor(this.imageWidth / this.aspectRatio);
@@ -62,7 +66,7 @@ export class RayTracingCamera implements ICamera<ImageData> {
         let pixelColor = new Vec3(0, 0, 0);
         for (let s = 0; s < this.samplesPerPixel; s += 1) {
           const r = this.getRay(i, j);
-          pixelColor = pixelColor.add(this.rayColor(r, world));
+          pixelColor = pixelColor.add(this.rayColor(r, world, this.maxDepth));
         }
         this.drawPixel(index, pixelColor, this.samplesPerPixel);
       }
@@ -80,13 +84,20 @@ export class RayTracingCamera implements ICamera<ImageData> {
     return new Ray(this.center, rayDirection);
   }
 
-  rayColor(ray: Ray, world: IHittable): Color {
+  rayColor(ray: Ray, world: IHittable, depth: number): Color {
     const hitRecord: IHitRecord = new HitRecord();
-    if (world.hit(ray, new Interval(0, Number.POSITIVE_INFINITY), hitRecord)) {
-      return hitRecord.normal
-        .add(new Vec3(1, 1, 1))
-        .multiply(0.5)
-        .multiply(255);
+    if (depth <= 0) {
+      return new Vec3(0, 0, 0);
+    }
+    if (
+      world.hit(ray, new Interval(0.001, Number.POSITIVE_INFINITY), hitRecord)
+    ) {
+      const direction = hitRecord.normal.add(Vec3.randomUnitVector());
+      return this.rayColor(
+        new Ray(hitRecord.p, direction),
+        world,
+        depth - 1,
+      ).multiply(0.5);
     }
 
     const unitDirection = ray.direction.unitVector();
@@ -94,8 +105,7 @@ export class RayTracingCamera implements ICamera<ImageData> {
 
     return new Vec3(1.0, 1.0, 1.0)
       .multiply(1.0 - a)
-      .add(new Vec3(0.5, 0.7, 1.0).multiply(a))
-      .multiply(255);
+      .add(new Vec3(0.5, 0.7, 1.0).multiply(a));
   }
 
   pixelSampleSquare(): Vec3 {
@@ -104,15 +114,23 @@ export class RayTracingCamera implements ICamera<ImageData> {
     return this.pixelDeltaU.multiply(px).add(this.pixelDeltaV.multiply(py));
   }
 
+  linearToGamma(linearComponent: number): number {
+    return Math.sqrt(linearComponent);
+  }
+
   drawPixel(index: number, pixelColor: Color, samplesPerPixel: number): void {
     const scale = 1.0 / samplesPerPixel;
-    const r = pixelColor.x * scale;
-    const g = pixelColor.y * scale;
-    const b = pixelColor.z * scale;
+    let r = pixelColor.x * scale;
+    let g = pixelColor.y * scale;
+    let b = pixelColor.z * scale;
 
-    this.imgData.data[index] = r;
-    this.imgData.data[index + 1] = g;
-    this.imgData.data[index + 2] = b;
+    r = this.linearToGamma(r);
+    g = this.linearToGamma(g);
+    b = this.linearToGamma(b);
+
+    this.imgData.data[index] = 255 * this.intensity.clamp(r);
+    this.imgData.data[index + 1] = 255 * this.intensity.clamp(g);
+    this.imgData.data[index + 2] = 255 * this.intensity.clamp(b);
     this.imgData.data[index + 3] = 255;
   }
 }
