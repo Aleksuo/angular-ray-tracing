@@ -31,6 +31,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.camera = new RayTracingCamera();
     this.camera.aspectRatio = 16.0 / 9.0;
     this.camera.imageWidth = 800;
+    this.camera.samplesPerPixel = 10;
 
     this.camera.initialize();
 

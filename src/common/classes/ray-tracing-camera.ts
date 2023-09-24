@@ -14,6 +14,8 @@ export class RayTracingCamera implements ICamera<ImageData> {
 
   imageHeight!: number;
 
+  samplesPerPixel: number = 1;
+
   private center!: Point3;
 
   private pixel00Location!: Point3;
@@ -56,19 +58,26 @@ export class RayTracingCamera implements ICamera<ImageData> {
   render(world: IHittable): ImageData {
     for (let j = 0; j < this.imageHeight; j += 1) {
       for (let i = 0; i < this.imageWidth; i += 1) {
-        const pixelCenter = this.pixel00Location
-          .add(this.pixelDeltaU.multiply(i))
-          .add(this.pixelDeltaV.multiply(j));
-        const rayDirection = pixelCenter.subtract(this.center);
         const index = (j * this.imageWidth + i) * 4;
-
-        const r = new Ray(this.center, rayDirection);
-        const pixelColor = this.rayColor(r, world);
-
-        this.drawPixel(index, pixelColor);
+        let pixelColor = new Vec3(0, 0, 0);
+        for (let s = 0; s < this.samplesPerPixel; s += 1) {
+          const r = this.getRay(i, j);
+          pixelColor = pixelColor.add(this.rayColor(r, world));
+        }
+        this.drawPixel(index, pixelColor, this.samplesPerPixel);
       }
     }
     return this.imgData;
+  }
+
+  getRay(i: number, j: number): Ray {
+    const pixelCenter = this.pixel00Location
+      .add(this.pixelDeltaU.multiply(i))
+      .add(this.pixelDeltaV.multiply(j));
+    const pixelSample = pixelCenter.add(this.pixelSampleSquare());
+    const rayDirection = pixelSample.subtract(this.center);
+
+    return new Ray(this.center, rayDirection);
   }
 
   rayColor(ray: Ray, world: IHittable): Color {
@@ -89,10 +98,21 @@ export class RayTracingCamera implements ICamera<ImageData> {
       .multiply(255);
   }
 
-  drawPixel(index: number, pixelColor: Color): void {
-    this.imgData.data[index] = pixelColor.x;
-    this.imgData.data[index + 1] = pixelColor.y;
-    this.imgData.data[index + 2] = pixelColor.z;
+  pixelSampleSquare(): Vec3 {
+    const px = -0.5 + Math.random();
+    const py = -0.5 + Math.random();
+    return this.pixelDeltaU.multiply(px).add(this.pixelDeltaV.multiply(py));
+  }
+
+  drawPixel(index: number, pixelColor: Color, samplesPerPixel: number): void {
+    const scale = 1.0 / samplesPerPixel;
+    const r = pixelColor.x * scale;
+    const g = pixelColor.y * scale;
+    const b = pixelColor.z * scale;
+
+    this.imgData.data[index] = r;
+    this.imgData.data[index + 1] = g;
+    this.imgData.data[index + 2] = b;
     this.imgData.data[index + 3] = 255;
   }
 }

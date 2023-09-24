@@ -22,4 +22,10 @@ export class Interval {
   surrounds(num: number): boolean {
     return this.min < num && num < this.max;
   }
+
+  clamp(num: number): number {
+    if (num < this.min) return this.min;
+    if (num > this.max) return this.max;
+    return num;
+  }
 }
