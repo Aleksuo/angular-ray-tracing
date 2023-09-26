@@ -34,8 +34,8 @@ export class AppComponent implements AfterViewInit, OnInit {
   ngOnInit(): void {
     this.camera = new RayTracingCamera();
     this.camera.aspectRatio = 16.0 / 9.0;
-    this.camera.imageWidth = 1200;
-    this.camera.samplesPerPixel = 20;
+    this.camera.imageWidth = 800;
+    this.camera.samplesPerPixel = 1;
     this.camera.maxDepth = 50;
 
     this.camera.vFov = 20;
