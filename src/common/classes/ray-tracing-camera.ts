@@ -27,6 +27,10 @@ export class RayTracingCamera implements ICamera<ImageData> {
 
   vUp: Vec3 = new Vec3(0, 1, 0);
 
+  defocusAngle = 0;
+
+  focusDistance = 10;
+
   private center!: Point3;
 
   private pixel00Location!: Point3;
@@ -45,16 +49,20 @@ export class RayTracingCamera implements ICamera<ImageData> {
 
   private v!: Vec3;
 
+  private defocusDiskU!: Vec3;
+
+  private defocusDiskV!: Vec3;
+
   initialize(): void {
     this.imageHeight = Math.floor(this.imageWidth / this.aspectRatio);
     this.imageHeight = this.imageHeight < 1 ? 1 : this.imageHeight;
 
-    const focalLength = this.lookFrom.subtract(this.lookAt).length();
     const theta = degreesToRadians(this.vFov);
     const h = Math.tan(theta / 2);
-    const viewportHeight = 2.0 * h * focalLength;
+    const viewportHeight = 2.0 * h * this.focusDistance;
     const viewportWidth =
       viewportHeight * (Math.floor(this.imageWidth) / this.imageHeight);
+
     this.center = this.lookFrom;
 
     this.w = this.lookFrom.subtract(this.lookAt).unitVector();
@@ -70,12 +78,17 @@ export class RayTracingCamera implements ICamera<ImageData> {
     const viewportUpperLeft = this.center
       .subtract(viewportU.divide(2))
       .subtract(viewportV.divide(2))
-      .subtract(this.w.multiply(focalLength));
+      .subtract(this.w.multiply(this.focusDistance));
 
     this.pixel00Location = this.pixelDeltaU
       .add(this.pixelDeltaV)
       .multiply(0.5)
       .add(viewportUpperLeft);
+
+    const defocusRadius =
+      this.focusDistance * Math.tan(degreesToRadians(this.defocusAngle / 2));
+    this.defocusDiskU = this.u.multiply(defocusRadius);
+    this.defocusDiskV = this.v.multiply(defocusRadius);
 
     this.imgData = new ImageData(this.imageWidth, this.imageHeight);
   }
@@ -100,9 +113,19 @@ export class RayTracingCamera implements ICamera<ImageData> {
       .add(this.pixelDeltaU.multiply(i))
       .add(this.pixelDeltaV.multiply(j));
     const pixelSample = pixelCenter.add(this.pixelSampleSquare());
-    const rayDirection = pixelSample.subtract(this.center);
+
+    const rayOrigin =
+      this.defocusAngle <= 0 ? this.center : this.defocusDiskSample();
+    const rayDirection = pixelSample.subtract(rayOrigin);
 
     return new Ray(this.center, rayDirection);
+  }
+
+  defocusDiskSample(): Point3 {
+    const p = Vec3.randomInUnitDisk();
+    return this.center
+      .add(this.defocusDiskU.multiply(p.x))
+      .add(this.defocusDiskV.multiply(p.y));
   }
 
   rayColor(ray: Ray, world: IHittable, depth: number): Color {

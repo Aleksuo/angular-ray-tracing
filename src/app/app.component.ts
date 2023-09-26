@@ -34,13 +34,17 @@ export class AppComponent implements AfterViewInit, OnInit {
   ngOnInit(): void {
     this.camera = new RayTracingCamera();
     this.camera.aspectRatio = 16.0 / 9.0;
-    this.camera.imageWidth = 800;
-    this.camera.samplesPerPixel = 100;
+    this.camera.imageWidth = 400;
+    this.camera.samplesPerPixel = 500;
+    this.camera.maxDepth = 50;
 
     this.camera.vFov = 20;
     this.camera.lookFrom = new Vec3(-2, 2, 1);
     this.camera.lookAt = new Vec3(0, 0, -1);
     this.camera.vUp = new Vec3(0, 1, 0);
+
+    this.camera.defocusAngle = 0.2;
+    this.camera.focusDistance = 3.4;
 
     this.camera.initialize();
 
@@ -49,7 +53,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     const materialGround = new Lambertian(new Vec3(0.8, 0.8, 0.0));
     const materialCenter = new Lambertian(new Vec3(0.1, 0.2, 0.5));
     const materialLeft = new Dielectric(1.5);
-    const materialRight = new Metal(new Vec3(0.8, 0.6, 0.2), 1.0);
+    const materialRight = new Metal(new Vec3(0.8, 0.6, 0.2), 0);
 
     this.world.add(new Sphere(new Vec3(0, 0, -1), 0.5, materialCenter));
     this.world.add(new Sphere(new Vec3(0, -100.5, -1), 100, materialGround));

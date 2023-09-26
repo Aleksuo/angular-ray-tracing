@@ -86,6 +86,14 @@ export class Vec3 {
     return onUnitSphere.negate();
   }
 
+  static randomInUnitDisk(): Vec3 {
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      const p = new Vec3(randomRange(-1, 1), randomRange(-1, 1), 0);
+      if (p.lengthSquared() < 1) return p;
+    }
+  }
+
   static random(min = 0, max = 1): Vec3 {
     return new Vec3(
       randomRange(min, max),
