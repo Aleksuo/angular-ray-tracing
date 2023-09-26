@@ -6,6 +6,7 @@ import { Ray } from './ray';
 import { Interval } from './interval';
 import { HitRecord } from './hit-record';
 import { IHitRecord } from '../interfaces/hit-record.interface';
+import { degreesToRadians } from '../utilities/math.util';
 
 export class RayTracingCamera implements ICamera<ImageData> {
   aspectRatio!: number;
@@ -14,9 +15,17 @@ export class RayTracingCamera implements ICamera<ImageData> {
 
   imageHeight!: number;
 
-  samplesPerPixel: number = 50;
+  samplesPerPixel: number = 1;
 
-  maxDepth: number = 50;
+  maxDepth: number = 10;
+
+  vFov: number = 90;
+
+  lookFrom: Point3 = new Vec3(0, 0, -1);
+
+  lookAt: Point3 = new Vec3(0, 0, 0);
+
+  vUp: Vec3 = new Vec3(0, 1, 0);
 
   private center!: Point3;
 
@@ -30,18 +39,30 @@ export class RayTracingCamera implements ICamera<ImageData> {
 
   private intensity: Interval = new Interval(0, 0.999);
 
+  private w!: Vec3;
+
+  private u!: Vec3;
+
+  private v!: Vec3;
+
   initialize(): void {
     this.imageHeight = Math.floor(this.imageWidth / this.aspectRatio);
     this.imageHeight = this.imageHeight < 1 ? 1 : this.imageHeight;
 
-    const focalLength = 1.0;
-    const viewportHeight = 2.0;
+    const focalLength = this.lookFrom.subtract(this.lookAt).length();
+    const theta = degreesToRadians(this.vFov);
+    const h = Math.tan(theta / 2);
+    const viewportHeight = 2.0 * h * focalLength;
     const viewportWidth =
       viewportHeight * (Math.floor(this.imageWidth) / this.imageHeight);
-    this.center = new Vec3(0, 0, 0);
+    this.center = this.lookFrom;
 
-    const viewportU = new Vec3(viewportWidth, 0, 0);
-    const viewportV = new Vec3(0, -viewportHeight, 0);
+    this.w = this.lookFrom.subtract(this.lookAt).unitVector();
+    this.u = this.vUp.cross(this.w).unitVector();
+    this.v = this.w.cross(this.u);
+
+    const viewportU = this.u.multiply(viewportWidth);
+    const viewportV = this.v.negate().multiply(viewportHeight);
 
     this.pixelDeltaU = viewportU.divide(this.imageWidth);
     this.pixelDeltaV = viewportV.divide(this.imageHeight);
@@ -49,7 +70,7 @@ export class RayTracingCamera implements ICamera<ImageData> {
     const viewportUpperLeft = this.center
       .subtract(viewportU.divide(2))
       .subtract(viewportV.divide(2))
-      .subtract(new Vec3(0, 0, focalLength));
+      .subtract(this.w.multiply(focalLength));
 
     this.pixel00Location = this.pixelDeltaU
       .add(this.pixelDeltaV)

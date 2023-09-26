@@ -13,6 +13,7 @@ import { ICamera } from 'src/common/interfaces/camera.interfce';
 import { Lambertian } from 'src/common/classes/lambertian';
 import { Metal } from 'src/common/classes/metal';
 import { Dielectric } from 'src/common/classes/dielectric';
+import { Ray } from 'src/common/classes/ray';
 
 @Component({
   selector: 'app-root',
@@ -26,7 +27,7 @@ export class AppComponent implements AfterViewInit, OnInit {
 
   context: CanvasRenderingContext2D | null = null;
 
-  camera!: ICamera<ImageData>;
+  camera!: RayTracingCamera;
 
   world!: HittableList;
 
@@ -34,7 +35,12 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.camera = new RayTracingCamera();
     this.camera.aspectRatio = 16.0 / 9.0;
     this.camera.imageWidth = 800;
-    this.camera.samplesPerPixel = 10;
+    this.camera.samplesPerPixel = 100;
+
+    this.camera.vFov = 20;
+    this.camera.lookFrom = new Vec3(-2, 2, 1);
+    this.camera.lookAt = new Vec3(0, 0, -1);
+    this.camera.vUp = new Vec3(0, 1, 0);
 
     this.camera.initialize();
 
