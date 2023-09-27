@@ -4,6 +4,8 @@ import {
   ViewChild,
   ElementRef,
   OnInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { HittableList } from 'src/common/classes/hittable-list';
 import { Sphere } from 'src/common/classes/sphere';
@@ -19,6 +21,7 @@ import { randomRange } from 'src/common/utilities/math.util';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements AfterViewInit, OnInit {
   @ViewChild('canvasElement', { static: false })
@@ -31,12 +34,14 @@ export class AppComponent implements AfterViewInit, OnInit {
 
   world!: HittableList;
 
+  constructor(private changeDetectorRef: ChangeDetectorRef) {}
+
   ngOnInit(): void {
     this.camera = new RayTracingCamera();
     this.camera.aspectRatio = 16.0 / 9.0;
-    this.camera.imageWidth = 800;
-    this.camera.samplesPerPixel = 1;
-    this.camera.maxDepth = 50;
+    this.camera.imageWidth = 1200;
+    this.camera.samplesPerPixel = 50;
+    this.camera.maxDepth = 15;
 
     this.camera.vFov = 20;
     this.camera.lookFrom = new Vec3(13, 2, 3);
@@ -97,7 +102,10 @@ export class AppComponent implements AfterViewInit, OnInit {
       this.context.canvas.width = this.camera.imageWidth;
       this.context.canvas.height = this.camera.imageHeight;
 
-      this.context.putImageData(this.camera.render(this.world), 0, 0);
+      this.camera.render(this.world).subscribe((imageData) => {
+        this.context?.putImageData(imageData, 0, 0);
+        this.changeDetectorRef.detectChanges();
+      });
     }
   }
 }

@@ -1,3 +1,4 @@
+import { Observable, generate, map, asyncScheduler } from 'rxjs';
 import { ICamera } from '../interfaces/camera.interfce';
 import { IHittable } from '../interfaces/hittable.interface';
 import { Color, Point3 } from '../types/vec3.types';
@@ -8,7 +9,7 @@ import { HitRecord } from './hit-record';
 import { IHitRecord } from '../interfaces/hit-record.interface';
 import { degreesToRadians } from '../utilities/math.util';
 
-export class RayTracingCamera implements ICamera<ImageData> {
+export class RayTracingCamera implements ICamera<Observable<ImageData>> {
   aspectRatio!: number;
 
   imageWidth!: number;
@@ -91,19 +92,27 @@ export class RayTracingCamera implements ICamera<ImageData> {
     this.defocusDiskV = this.v.multiply(defocusRadius);
 
     this.imgData = new ImageData(this.imageWidth, this.imageHeight);
+    this.imgData.data.fill(0);
   }
 
-  render(world: IHittable): ImageData {
-    for (let j = 0; j < this.imageHeight; j += 1) {
-      for (let i = 0; i < this.imageWidth; i += 1) {
-        const index = (j * this.imageWidth + i) * 4;
-        let pixelColor = new Vec3(0, 0, 0);
-        for (let s = 0; s < this.samplesPerPixel; s += 1) {
-          const r = this.getRay(i, j);
-          pixelColor = pixelColor.add(this.rayColor(r, world, this.maxDepth));
-        }
-        this.drawPixel(index, pixelColor, this.samplesPerPixel);
+  render(world: IHittable): Observable<ImageData> {
+    return generate(
+      0,
+      (j) => j < this.imageHeight,
+      (j) => j + 1,
+      asyncScheduler,
+    ).pipe(map((j) => this.renderRow(j, world)));
+  }
+
+  private renderRow(j: number, world: IHittable): ImageData {
+    for (let i = 0; i < this.imageWidth; i += 1) {
+      const index = (j * this.imageWidth + i) * 4;
+      let pixelColor = new Vec3(0, 0, 0);
+      for (let s = 0; s < this.samplesPerPixel; s += 1) {
+        const r = this.getRay(i, j);
+        pixelColor = pixelColor.add(this.rayColor(r, world, this.maxDepth));
       }
+      this.drawPixel(index, pixelColor, this.samplesPerPixel);
     }
     return this.imgData;
   }
