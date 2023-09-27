@@ -1,12 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  ViewChild,
-  ElementRef,
-  OnInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { HittableList } from 'src/common/classes/hittable-list';
 import { Sphere } from 'src/common/classes/sphere';
 import { Vec3 } from 'src/common/classes/vec3';
@@ -16,6 +8,7 @@ import { Metal } from 'src/common/classes/metal';
 import { Dielectric } from 'src/common/classes/dielectric';
 import { IMaterial } from 'src/common/interfaces/material.interface';
 import { randomRange } from 'src/common/utilities/math.util';
+import { Observable, map } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -23,18 +16,12 @@ import { randomRange } from 'src/common/utilities/math.util';
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent implements AfterViewInit, OnInit {
-  @ViewChild('canvasElement', { static: false })
-  canvasElement: ElementRef<HTMLCanvasElement> =
-    {} as ElementRef<HTMLCanvasElement>;
-
-  context: CanvasRenderingContext2D | null = null;
-
+export class AppComponent implements OnInit {
   camera!: RayTracingCamera;
 
   world!: HittableList;
 
-  constructor(private changeDetectorRef: ChangeDetectorRef) {}
+  canvasImageData$!: Observable<ImageData>;
 
   ngOnInit(): void {
     this.camera = new RayTracingCamera();
@@ -48,7 +35,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.camera.lookAt = new Vec3(0, 0, -1);
     this.camera.vUp = new Vec3(0, 1, 0);
 
-    this.camera.defocusAngle = 0.15;
+    this.camera.defocusAngle = 0;
     this.camera.focusDistance = 10;
 
     this.camera.initialize();
@@ -94,18 +81,9 @@ export class AppComponent implements AfterViewInit, OnInit {
 
     const material3 = new Metal(new Vec3(0.7, 0.6, 0.5), 0.0);
     this.world.add(new Sphere(new Vec3(4, 1, 0), 1.0, material3));
-  }
 
-  ngAfterViewInit(): void {
-    this.context = this.canvasElement.nativeElement.getContext('2d');
-    if (this.context) {
-      this.context.canvas.width = this.camera.imageWidth;
-      this.context.canvas.height = this.camera.imageHeight;
-
-      this.camera.render(this.world).subscribe((imageData) => {
-        this.context?.putImageData(imageData, 0, 0);
-        this.changeDetectorRef.detectChanges();
-      });
-    }
+    this.canvasImageData$ = this.camera
+      .render(this.world)
+      .pipe(map((img) => structuredClone(img))); // copy because of change detection
   }
 }
