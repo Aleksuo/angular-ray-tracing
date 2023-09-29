@@ -28,6 +28,10 @@
             "scripts": []
           },
           "configurations": {
+            "gh-pages": {
+              "baseHref": "/angular-ray-tracing/",
+              "outputHashing": "all"
+            },
             "production": {
               "budgets": [
                 {
