@@ -6,7 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
+    "test": "ng test --browsers ChromeHeadless --watch=false",
     "prepare": "husky install",
     "lint": "ng lint && prettier --check .",
     "lint-fix": "ng lint --fix && prettier --write ."
