@@ -1,0 +1,12 @@
+@import '../../colors.scss';
+
+.settings-panel {
+  background-color: $color-secondary-dark3;
+  position: relative;
+  border: $color-secondary 1px solid;
+  width: 30rem;
+  height: 100vh;
+  &__container {
+    padding: 1.5rem;
+  }
+}

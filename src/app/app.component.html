@@ -1,5 +1,11 @@
-<div class="container">
-  <div class="view-container">
-    <app-ng-canvas [canvasImageData]="canvasImageData$ | async"></app-ng-canvas>
+<div class="row">
+  <div class="col-3">
+    <app-settings-panel></app-settings-panel>
+  </div>
+  <div class="col-9 container">
+    <div class="view-container">
+      <app-ng-canvas [canvasImageData]="canvasImageData$ | async">
+      </app-ng-canvas>
+    </div>
   </div>
 </div>
