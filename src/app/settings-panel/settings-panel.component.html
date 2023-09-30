@@ -1,7 +1,53 @@
 <div class="settings-panel">
   <div class="settings-panel__container">
+    <h1>Settings</h1>
+    <hr />
     <div class="row">
-      <div class="col-12">Test</div>
+      <div class="col-6">
+        <button (click)="this.resetSettings()">Reset settings</button>
+      </div>
+      <div class="col-6">
+        <button (click)="this.applySettings()">Apply</button>
+      </div>
     </div>
+    <hr />
+    <!-- Ray tracing settings -->
+    <div class="row">
+      <div class="col-12"><h2>Ray tracing settings</h2></div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="row">
+          <div class="col-12">
+            <label for="samplesPerPixel">Samples per pixel:</label>
+          </div>
+          <div class="col-12">
+            <input
+              id="samplesPerPixel"
+              type="number"
+              [formControl]="
+                this.rayTracingSettingsForm.controls.samplesPerPixel
+              "
+            />
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="row">
+          <div class="col-12">
+            <label for="maxDepth">Max ray bounce depth:</label>
+          </div>
+          <div class="col-12">
+            <input
+              id="maxDepth"
+              type="number"
+              [formControl]="this.rayTracingSettingsForm.controls.maxDepth"
+            />
+          </div>
+        </div>
+      </div>
+      <!-- Camera settings -->
+    </div>
+    <hr />
   </div>
 </div>

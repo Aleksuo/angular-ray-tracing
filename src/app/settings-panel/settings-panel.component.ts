@@ -1,10 +1,25 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   OnInit,
-  ViewEncapsulation,
+  Output,
 } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+
+interface RayTracingSettings {
+  samplesPerPixel: number;
+  maxDepth: number;
+}
+interface RayTracingSettingsForm {
+  samplesPerPixel: FormControl<number>;
+  maxDepth: FormControl<number>;
+}
 
 @Component({
   selector: 'app-settings-panel',
@@ -13,14 +28,21 @@ import { FormControl, FormGroup } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsPanelComponent implements OnInit {
-  form: FormGroup = new FormGroup({});
+  @Output() emitSettings = new EventEmitter<RayTracingSettings>();
+
+  mainForm: FormGroup = new FormGroup({});
+
+  rayTracingSettingsForm!: FormGroup<RayTracingSettingsForm>;
+
+  constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
-    this.form = new FormGroup({
-      // aspectRatio: new FormControl(16.0 / 9.0),
-      // imageWidth: new FormControl(1200),
-      samplesPerPixel: new FormControl(50),
-      maxDepth: new FormControl(15),
+    this.rayTracingSettingsForm = this.fb.group<RayTracingSettingsForm>({
+      samplesPerPixel: this.fb.control<number>(50, { nonNullable: true }),
+      maxDepth: this.fb.control<number>(15, { nonNullable: true }),
+    });
+    this.mainForm = new FormGroup<any>({
+      rayTracingSettings: this.rayTracingSettingsForm,
       vFov: new FormControl(20),
       lookFromX: new FormControl(13),
       lookFromY: new FormControl(2),
@@ -34,5 +56,21 @@ export class SettingsPanelComponent implements OnInit {
       defocusAngle: new FormControl(0),
       focusDistance: new FormControl(10),
     });
+  }
+
+  resetSettings(): void {
+    this.rayTracingSettingsForm.reset();
+    this.emitSettings.emit(
+      this.rayTracingSettingsForm.value as RayTracingSettings,
+    );
+  }
+
+  applySettings(): void {
+    this.rayTracingSettingsForm.markAllAsTouched();
+    if (this.rayTracingSettingsForm.valid) {
+      this.emitSettings.emit(
+        this.rayTracingSettingsForm.value as RayTracingSettings,
+      );
+    }
   }
 }

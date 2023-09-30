@@ -86,4 +86,11 @@ export class AppComponent implements OnInit {
       .render(this.world)
       .pipe(map((img) => structuredClone(img))); // copy because of change detection
   }
+
+  handleSettingsChange(settings: any): void {
+    this.camera.setSettings(settings);
+    this.canvasImageData$ = this.camera
+      .render(this.world)
+      .pipe(map((img) => structuredClone(img)));
+  }
 }

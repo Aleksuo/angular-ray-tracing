@@ -54,6 +54,12 @@ export class RayTracingCamera implements ICamera<Observable<ImageData>> {
 
   private defocusDiskV!: Vec3;
 
+  setSettings(settings: any): void {
+    this.samplesPerPixel = settings.samplesPerPixel;
+    this.maxDepth = settings.maxDepth;
+    this.initialize();
+  }
+
   initialize(): void {
     this.imageHeight = Math.floor(this.imageWidth / this.aspectRatio);
     this.imageHeight = this.imageHeight < 1 ? 1 : this.imageHeight;
