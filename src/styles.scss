@@ -1,12 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
-$color-primary: #007acc;
-$color-secondary: #3e3e42;
-$color-secondary-dark: #2d2d30;
-$color-secondary-dark2: #252526;
-$color-secondary-dark3: #1e1e1e;
+@import './grid-system.scss';
+@import './colors.scss';
 
 body {
-  background-color: $color-secondary-dark3;
+  background-color: $color-secondary-dark2;
   margin: 0;
   padding: 0;
   height: 100%;
