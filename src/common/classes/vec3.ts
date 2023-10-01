@@ -66,6 +66,10 @@ export class Vec3 {
     return Math.abs(this.x) < s && Math.abs(this.y) < s && Math.abs(this.z) < s;
   }
 
+  clone(): Vec3 {
+    return new Vec3(this.x, this.y, this.z);
+  }
+
   static randomUnitVector(): Vec3 {
     return Vec3.randomInUnitSphere().unitVector();
   }

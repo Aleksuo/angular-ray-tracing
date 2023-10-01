@@ -55,8 +55,15 @@ export class RayTracingCamera implements ICamera<Observable<ImageData>> {
   private defocusDiskV!: Vec3;
 
   setSettings(settings: any): void {
-    this.samplesPerPixel = settings.samplesPerPixel;
-    this.maxDepth = settings.maxDepth;
+    this.samplesPerPixel = settings.rayTracingSettings.samplesPerPixel;
+    this.maxDepth = settings.rayTracingSettings.maxDepth;
+
+    this.vFov = settings.cameraSettings.vFov;
+    this.lookFrom = settings.cameraSettings.lookFrom.clone();
+    this.lookAt = settings.cameraSettings.lookAt.clone();
+    this.defocusAngle = settings.cameraSettings.defocusAngle;
+    this.focusDistance = settings.cameraSettings.focusDistance;
+
     this.initialize();
   }
 

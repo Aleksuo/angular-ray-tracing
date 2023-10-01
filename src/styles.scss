@@ -3,8 +3,9 @@
 @import './colors.scss';
 
 body {
-  font-size: large;
-  color: lightgray;
+  font-family: 'Source Code Pro';
+  font-size: small;
+  color: whitesmoke;
   background-color: $color-secondary-dark2;
   margin: 0;
   padding: 0;
