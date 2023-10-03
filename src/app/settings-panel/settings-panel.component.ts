@@ -37,14 +37,25 @@ interface CameraSettingsForm {
   focusDistance: FormControl<number>;
 }
 
+interface OtherSettings {
+  skyBoxColor: Vec3;
+}
+
+interface OtherSettingsForm {
+  skyBoxColorR: FormControl<number>;
+  skyBoxColorG: FormControl<number>;
+  skyBoxColorB: FormControl<number>;
+}
 interface Settings {
   rayTracingSettings: RayTracingSettings;
   cameraSettings: CameraSettings;
+  otherSettings: OtherSettings;
 }
 
 interface SettingsForm {
   rayTracingSettings: FormGroup<RayTracingSettingsForm>;
   cameraSettings: FormGroup<CameraSettingsForm>;
+  otherSettingsForm: FormGroup<OtherSettingsForm>;
 }
 
 @Component({
@@ -61,6 +72,8 @@ export class SettingsPanelComponent implements OnInit {
   rayTracingSettingsForm!: FormGroup<RayTracingSettingsForm>;
 
   cameraSettingsForm!: FormGroup<CameraSettingsForm>;
+
+  otherSettingsForm!: FormGroup<OtherSettingsForm>;
 
   constructor(private fb: FormBuilder) {}
 
@@ -80,9 +93,15 @@ export class SettingsPanelComponent implements OnInit {
       defocusAngle: this.fb.control<number>(0, { nonNullable: true }),
       focusDistance: this.fb.control<number>(10, { nonNullable: true }),
     });
+    this.otherSettingsForm = this.fb.group<OtherSettingsForm>({
+      skyBoxColorR: this.fb.control<number>(0.5, { nonNullable: true }),
+      skyBoxColorG: this.fb.control<number>(0.7, { nonNullable: true }),
+      skyBoxColorB: this.fb.control<number>(1, { nonNullable: true }),
+    });
     this.mainForm = new FormGroup<SettingsForm>({
       rayTracingSettings: this.rayTracingSettingsForm,
       cameraSettings: this.cameraSettingsForm,
+      otherSettingsForm: this.otherSettingsForm,
     });
   }
 
@@ -105,6 +124,13 @@ export class SettingsPanelComponent implements OnInit {
         ),
         defocusAngle: this.cameraSettingsForm.controls.defocusAngle.value,
         focusDistance: this.cameraSettingsForm.controls.focusDistance.value,
+      },
+      otherSettings: {
+        skyBoxColor: new Vec3(
+          this.otherSettingsForm.controls.skyBoxColorR.value,
+          this.otherSettingsForm.controls.skyBoxColorG.value,
+          this.otherSettingsForm.controls.skyBoxColorB.value,
+        ),
       },
     };
     this.emitSettings.emit(defaultSettings);
@@ -130,6 +156,13 @@ export class SettingsPanelComponent implements OnInit {
           ),
           defocusAngle: this.cameraSettingsForm.controls.defocusAngle.value,
           focusDistance: this.cameraSettingsForm.controls.focusDistance.value,
+        },
+        otherSettings: {
+          skyBoxColor: new Vec3(
+            this.otherSettingsForm.controls.skyBoxColorR.value,
+            this.otherSettingsForm.controls.skyBoxColorG.value,
+            this.otherSettingsForm.controls.skyBoxColorB.value,
+          ),
         },
       };
       this.emitSettings.emit(settings);

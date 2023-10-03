@@ -119,91 +119,148 @@
           </div>
         </fieldset>
       </div>
-      <div class="row">
-        <div class="col-12">
-          <fieldset>
-            <legend>Look at</legend>
-            <div class="row">
-              <div class="col-4">
-                <div class="row">
-                  <div class="col-12">
-                    <label for="lookAtX">X:</label>
-                  </div>
-                  <div class="col-12">
-                    <input
-                      class="settings-panel__input--fieldset"
-                      id="lookAtX"
-                      type="number"
-                      [formControl]="this.cameraSettingsForm.controls.lookAtX"
-                    />
-                  </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <fieldset>
+          <legend>Look at</legend>
+          <div class="row">
+            <div class="col-4">
+              <div class="row">
+                <div class="col-12">
+                  <label for="lookAtX">X:</label>
                 </div>
-              </div>
-              <div class="col-4">
-                <div class="row">
-                  <div class="col-12">
-                    <label for="lookAtY">Y:</label>
-                  </div>
-                  <div class="col-12">
-                    <input
-                      class="settings-panel__input--fieldset"
-                      id="lookAtY"
-                      type="number"
-                      [formControl]="this.cameraSettingsForm.controls.lookAtY"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div class="col-4">
-                <div class="row">
-                  <div class="col-12">
-                    <label for="lookAtZ">Z:</label>
-                  </div>
-                  <div class="col-12">
-                    <input
-                      class="settings-panel__input--fieldset"
-                      id="lookAtZ"
-                      type="number"
-                      [formControl]="this.cameraSettingsForm.controls.lookAtZ"
-                    />
-                  </div>
+                <div class="col-12">
+                  <input
+                    class="settings-panel__input--fieldset"
+                    id="lookAtX"
+                    type="number"
+                    [formControl]="this.cameraSettingsForm.controls.lookAtX"
+                  />
                 </div>
               </div>
             </div>
-          </fieldset>
-        </div>
+            <div class="col-4">
+              <div class="row">
+                <div class="col-12">
+                  <label for="lookAtY">Y:</label>
+                </div>
+                <div class="col-12">
+                  <input
+                    class="settings-panel__input--fieldset"
+                    id="lookAtY"
+                    type="number"
+                    [formControl]="this.cameraSettingsForm.controls.lookAtY"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="row">
+                <div class="col-12">
+                  <label for="lookAtZ">Z:</label>
+                </div>
+                <div class="col-12">
+                  <input
+                    class="settings-panel__input--fieldset"
+                    id="lookAtZ"
+                    type="number"
+                    [formControl]="this.cameraSettingsForm.controls.lookAtZ"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
         <div class="row">
-          <div class="col-6">
-            <div class="row">
-              <div class="col-12">
-                <label for="focusDistance">Focus distance:</label>
-              </div>
-              <div class="col-12">
-                <input
-                  class="settings-panel__input"
-                  id="focusDistance"
-                  type="number"
-                  [formControl]="this.cameraSettingsForm.controls.focusDistance"
-                />
-              </div>
-            </div>
+          <div class="col-12">
+            <label for="focusDistance">Focus distance:</label>
           </div>
-          <div class="col-6">
-            <div class="row">
-              <div class="col-12">
-                <label for="defocusAngle">Defocus angle:</label>
-              </div>
-              <div class="col-12">
-                <input
-                  class="settings-panel__input"
-                  id="defocusAngle"
-                  type="number"
-                  [formControl]="this.cameraSettingsForm.controls.defocusAngle"
-                />
-              </div>
-            </div>
+          <div class="col-12">
+            <input
+              class="settings-panel__input"
+              id="focusDistance"
+              type="number"
+              [formControl]="this.cameraSettingsForm.controls.focusDistance"
+            />
           </div>
         </div>
+      </div>
+      <div class="col-6">
+        <div class="row">
+          <div class="col-12">
+            <label for="defocusAngle">Defocus angle:</label>
+          </div>
+          <div class="col-12">
+            <input
+              class="settings-panel__input"
+              id="defocusAngle"
+              type="number"
+              [formControl]="this.cameraSettingsForm.controls.defocusAngle"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr />
+    <!-- Other settings -->
+    <h2>Other settings</h2>
+    <div class="row">
+      <div class="col-12">
+        <fieldset>
+          <legend>Skybox color</legend>
+          <div class="row">
+            <div class="col-4">
+              <div class="row">
+                <div class="col-12">
+                  <label for="skyBoxR">R:</label>
+                </div>
+                <div class="col-12">
+                  <input
+                    class="settings-panel__input--fieldset"
+                    id="skyBoxR"
+                    type="number"
+                    [formControl]="this.otherSettingsForm.controls.skyBoxColorR"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="row">
+                <div class="col-12">
+                  <label for="skyBoxG">G:</label>
+                </div>
+                <div class="col-12">
+                  <input
+                    class="settings-panel__input--fieldset"
+                    id="skyBoxG"
+                    type="number"
+                    [formControl]="this.otherSettingsForm.controls.skyBoxColorG"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="row">
+                <div class="col-12">
+                  <label for="skyBoxB">B:</label>
+                </div>
+                <div class="col-12">
+                  <input
+                    class="settings-panel__input--fieldset"
+                    id="skyBoxB"
+                    type="number"
+                    [formControl]="this.otherSettingsForm.controls.skyBoxColorB"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </fieldset>
       </div>
     </div>
   </div>

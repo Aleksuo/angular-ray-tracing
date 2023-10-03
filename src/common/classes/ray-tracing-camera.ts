@@ -32,6 +32,8 @@ export class RayTracingCamera implements ICamera<Observable<ImageData>> {
 
   focusDistance = 10;
 
+  skyBoxColor: Color = new Vec3(0.5, 0.7, 1.0);
+
   private center!: Point3;
 
   private pixel00Location!: Point3;
@@ -63,6 +65,7 @@ export class RayTracingCamera implements ICamera<Observable<ImageData>> {
     this.lookAt = settings.cameraSettings.lookAt.clone();
     this.defocusAngle = settings.cameraSettings.defocusAngle;
     this.focusDistance = settings.cameraSettings.focusDistance;
+    this.skyBoxColor = settings.otherSettings.skyBoxColor.clone();
 
     this.initialize();
   }
@@ -173,7 +176,7 @@ export class RayTracingCamera implements ICamera<Observable<ImageData>> {
 
     return new Vec3(1.0, 1.0, 1.0)
       .multiply(1.0 - a)
-      .add(new Vec3(0.5, 0.7, 1.0).multiply(a));
+      .add(this.skyBoxColor.multiply(a));
   }
 
   pixelSampleSquare(): Vec3 {
