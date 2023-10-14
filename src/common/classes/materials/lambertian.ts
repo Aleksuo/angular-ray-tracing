@@ -1,8 +1,8 @@
-import { IHitRecord } from '../interfaces/hit-record.interface';
-import { IMaterial } from '../interfaces/material.interface';
-import { Color } from '../types/vec3.types';
-import { Ray } from './ray';
-import { Vec3 } from './vec3';
+import { IHitRecord } from '../../interfaces/hit-record.interface';
+import { IMaterial } from '../../interfaces/material.interface';
+import { Color } from '../../types/vec3.types';
+import { Ray } from '../utilities/ray';
+import { Vec3 } from '../utilities/vec3';
 
 export class Lambertian implements IMaterial {
   albedo: Color;

@@ -1,4 +1,4 @@
-import { Point3 } from '../types/vec3.types';
+import { Point3 } from '../../types/vec3.types';
 import { Vec3 } from './vec3';
 
 export class Ray {

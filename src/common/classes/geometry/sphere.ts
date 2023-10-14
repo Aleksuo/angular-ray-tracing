@@ -1,9 +1,9 @@
-import { IHitRecord } from '../interfaces/hit-record.interface';
-import { IHittable } from '../interfaces/hittable.interface';
-import { Point3 } from '../types/vec3.types';
-import { Ray } from './ray';
-import { Interval } from './interval';
-import { IMaterial } from '../interfaces/material.interface';
+import { IHitRecord } from '../../interfaces/hit-record.interface';
+import { IHittable } from '../../interfaces/hittable.interface';
+import { Point3 } from '../../types/vec3.types';
+import { Ray } from '../utilities/ray';
+import { Interval } from '../utilities/interval';
+import { IMaterial } from '../../interfaces/material.interface';
 
 export class Sphere implements IHittable {
   center: Point3;

@@ -1,11 +1,11 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { HittableList } from 'src/common/classes/hittable-list';
-import { Sphere } from 'src/common/classes/sphere';
-import { Vec3 } from 'src/common/classes/vec3';
-import { RayTracingCamera } from 'src/common/classes/ray-tracing-camera';
-import { Lambertian } from 'src/common/classes/lambertian';
-import { Metal } from 'src/common/classes/metal';
-import { Dielectric } from 'src/common/classes/dielectric';
+import { HittableList } from 'src/common/classes/hittables/hittable-list';
+import { Sphere } from 'src/common/classes/geometry/sphere';
+import { Vec3 } from 'src/common/classes/utilities/vec3';
+import { RayTracingCamera } from 'src/common/classes/cameras/ray-tracing-camera';
+import { Lambertian } from 'src/common/classes/materials/lambertian';
+import { Metal } from 'src/common/classes/materials/metal';
+import { Dielectric } from 'src/common/classes/materials/dielectric';
 import { IMaterial } from 'src/common/interfaces/material.interface';
 import { randomRange } from 'src/common/utilities/math.util';
 import { Observable, map } from 'rxjs';

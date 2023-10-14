@@ -1,6 +1,6 @@
 import { Point3 } from '../types/vec3.types';
-import { Vec3 } from '../classes/vec3';
-import { Ray } from '../classes/ray';
+import { Vec3 } from '../classes/utilities/vec3';
+import { Ray } from '../classes/utilities/ray';
 // eslint-disable-next-line import/no-cycle
 import { IMaterial } from './material.interface';
 

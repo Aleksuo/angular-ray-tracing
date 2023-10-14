@@ -1,4 +1,4 @@
-import { Ray } from '../classes/ray';
+import { Ray } from '../classes/utilities/ray';
 // eslint-disable-next-line import/no-cycle
 import { IHitRecord } from './hit-record.interface';
 import { Color } from '../types/vec3.types';

@@ -1,8 +1,8 @@
-import { IHitRecord } from '../interfaces/hit-record.interface';
-import { IMaterial } from '../interfaces/material.interface';
-import { Ray } from './ray';
-import { Vec3 } from './vec3';
-import { Color } from '../types/vec3.types';
+import { IHitRecord } from '../../interfaces/hit-record.interface';
+import { IMaterial } from '../../interfaces/material.interface';
+import { Ray } from '../utilities/ray';
+import { Vec3 } from '../utilities/vec3';
+import { Color } from '../../types/vec3.types';
 
 export class Metal implements IMaterial {
   albedo: Color;

@@ -6,7 +6,7 @@ import {
   Output,
 } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { Vec3 } from 'src/common/classes/vec3';
+import { Vec3 } from 'src/common/classes/utilities/vec3';
 
 interface RayTracingSettings {
   samplesPerPixel: number;

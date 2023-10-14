@@ -1,13 +1,13 @@
 import { Observable, generate, map, asyncScheduler } from 'rxjs';
-import { ICamera } from '../interfaces/camera.interfce';
-import { IHittable } from '../interfaces/hittable.interface';
-import { Color, Point3 } from '../types/vec3.types';
-import { Vec3 } from './vec3';
-import { Ray } from './ray';
-import { Interval } from './interval';
-import { HitRecord } from './hit-record';
-import { IHitRecord } from '../interfaces/hit-record.interface';
-import { degreesToRadians } from '../utilities/math.util';
+import { ICamera } from '../../interfaces/camera.interfce';
+import { IHittable } from '../../interfaces/hittable.interface';
+import { Color, Point3 } from '../../types/vec3.types';
+import { Vec3 } from '../utilities/vec3';
+import { Ray } from '../utilities/ray';
+import { Interval } from '../utilities/interval';
+import { HitRecord } from '../hittables/hit-record';
+import { IHitRecord } from '../../interfaces/hit-record.interface';
+import { degreesToRadians } from '../../utilities/math.util';
 
 export class RayTracingCamera implements ICamera<Observable<ImageData>> {
   aspectRatio!: number;

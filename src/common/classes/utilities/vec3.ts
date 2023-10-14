@@ -1,4 +1,4 @@
-import { randomRange } from '../utilities/math.util';
+import { randomRange } from '../../utilities/math.util';
 
 export class Vec3 {
   x: number;

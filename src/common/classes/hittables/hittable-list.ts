@@ -1,8 +1,8 @@
-import { IHitRecord } from '../interfaces/hit-record.interface';
-import { IHittable } from '../interfaces/hittable.interface';
+import { IHitRecord } from '../../interfaces/hit-record.interface';
+import { IHittable } from '../../interfaces/hittable.interface';
 import { HitRecord } from './hit-record';
-import { Interval } from './interval';
-import { Ray } from './ray';
+import { Interval } from '../utilities/interval';
+import { Ray } from '../utilities/ray';
 
 export class HittableList implements IHittable {
   objects: IHittable[];
