@@ -1,12 +1,22 @@
 <div class="settings-panel">
   <div class="settings-panel__container">
     <h1>Settings</h1>
+    <div class="row">
+      <label for="settingsPanelSelect">Select scene:</label>
+      <div class="col-12">
+        <select id="settingsPanelSelect" [formControl]="this.selectedScene">
+          <option value="default">default</option>
+          <option value="glass-sphere-cube">glass-sphere-cube</option>
+        </select>
+      </div>
+    </div>
+    <hr />
     <div class="settings-panel__button-wrapper">
       <button class="settings-panel__button" (click)="this.resetSettings()">
         Reset settings
       </button>
       <button class="settings-panel__button" (click)="this.applySettings()">
-        Apply
+        Apply settings
       </button>
     </div>
     <hr />

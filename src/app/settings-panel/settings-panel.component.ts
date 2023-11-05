@@ -6,9 +6,11 @@ import {
   Output,
 } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Scene } from 'src/common/classes/utilities/scene';
+import { SceneFactory } from 'src/common/classes/utilities/scene-factory';
 import { Vec3 } from 'src/common/classes/utilities/vec3';
 
-interface RayTracingSettings {
+export interface RayTracingSettings {
   samplesPerPixel: number;
   maxDepth: number;
 }
@@ -17,7 +19,7 @@ interface RayTracingSettingsForm {
   maxDepth: FormControl<number>;
 }
 
-interface CameraSettings {
+export interface CameraSettings {
   vFov: number;
   lookFrom: Vec3;
   lookAt: Vec3;
@@ -37,7 +39,7 @@ interface CameraSettingsForm {
   focusDistance: FormControl<number>;
 }
 
-interface OtherSettings {
+export interface OtherSettings {
   skyBoxColor: Vec3;
 }
 
@@ -46,7 +48,7 @@ interface OtherSettingsForm {
   skyBoxColorG: FormControl<number>;
   skyBoxColorB: FormControl<number>;
 }
-interface Settings {
+export interface Settings {
   rayTracingSettings: RayTracingSettings;
   cameraSettings: CameraSettings;
   otherSettings: OtherSettings;
@@ -67,6 +69,13 @@ interface SettingsForm {
 export class SettingsPanelComponent implements OnInit {
   @Output() emitSettings = new EventEmitter<Settings>();
 
+  @Output() emitScene = new EventEmitter<Scene>();
+
+  selectedScene: FormControl<'default' | 'glass-sphere-cube'> = new FormControl(
+    'default',
+    { nonNullable: true },
+  );
+
   mainForm: FormGroup = new FormGroup({});
 
   rayTracingSettingsForm!: FormGroup<RayTracingSettingsForm>;
@@ -78,31 +87,75 @@ export class SettingsPanelComponent implements OnInit {
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
+    const scene = SceneFactory.createScene(this.selectedScene.value);
+    this.initializeFormFromSceneDefaultSettings(scene.defaultSettings);
+    this.emitScene.emit(scene);
+    this.selectedScene.valueChanges.subscribe((sceneType) =>
+      this.changeScene(sceneType),
+    );
+  }
+
+  initializeFormFromSceneDefaultSettings(settings: Settings): void {
+    const { rayTracingSettings, cameraSettings, otherSettings } = settings;
     this.rayTracingSettingsForm = this.fb.group<RayTracingSettingsForm>({
-      samplesPerPixel: this.fb.control<number>(50, { nonNullable: true }),
-      maxDepth: this.fb.control<number>(15, { nonNullable: true }),
+      samplesPerPixel: this.fb.control<number>(
+        rayTracingSettings.samplesPerPixel,
+        { nonNullable: true },
+      ),
+      maxDepth: this.fb.control<number>(rayTracingSettings.maxDepth, {
+        nonNullable: true,
+      }),
     });
     this.cameraSettingsForm = this.fb.group<CameraSettingsForm>({
-      vFov: this.fb.control<number>(20, { nonNullable: true }),
-      lookFromX: this.fb.control<number>(13, { nonNullable: true }),
-      lookFromY: this.fb.control<number>(2, { nonNullable: true }),
-      lookFromZ: this.fb.control<number>(3, { nonNullable: true }),
-      lookAtX: this.fb.control<number>(0, { nonNullable: true }),
-      lookAtY: this.fb.control<number>(0, { nonNullable: true }),
-      lookAtZ: this.fb.control<number>(-1, { nonNullable: true }),
-      defocusAngle: this.fb.control<number>(0, { nonNullable: true }),
-      focusDistance: this.fb.control<number>(10, { nonNullable: true }),
+      vFov: this.fb.control<number>(cameraSettings.vFov, { nonNullable: true }),
+      lookFromX: this.fb.control<number>(cameraSettings.lookFrom.x, {
+        nonNullable: true,
+      }),
+      lookFromY: this.fb.control<number>(cameraSettings.lookFrom.y, {
+        nonNullable: true,
+      }),
+      lookFromZ: this.fb.control<number>(cameraSettings.lookFrom.z, {
+        nonNullable: true,
+      }),
+      lookAtX: this.fb.control<number>(cameraSettings.lookAt.x, {
+        nonNullable: true,
+      }),
+      lookAtY: this.fb.control<number>(cameraSettings.lookAt.y, {
+        nonNullable: true,
+      }),
+      lookAtZ: this.fb.control<number>(cameraSettings.lookAt.z, {
+        nonNullable: true,
+      }),
+      defocusAngle: this.fb.control<number>(cameraSettings.defocusAngle, {
+        nonNullable: true,
+      }),
+      focusDistance: this.fb.control<number>(cameraSettings.focusDistance, {
+        nonNullable: true,
+      }),
     });
     this.otherSettingsForm = this.fb.group<OtherSettingsForm>({
-      skyBoxColorR: this.fb.control<number>(0.5, { nonNullable: true }),
-      skyBoxColorG: this.fb.control<number>(0.7, { nonNullable: true }),
-      skyBoxColorB: this.fb.control<number>(1, { nonNullable: true }),
+      skyBoxColorR: this.fb.control<number>(otherSettings.skyBoxColor.x, {
+        nonNullable: true,
+      }),
+      skyBoxColorG: this.fb.control<number>(otherSettings.skyBoxColor.y, {
+        nonNullable: true,
+      }),
+      skyBoxColorB: this.fb.control<number>(otherSettings.skyBoxColor.z, {
+        nonNullable: true,
+      }),
     });
     this.mainForm = new FormGroup<SettingsForm>({
       rayTracingSettings: this.rayTracingSettingsForm,
       cameraSettings: this.cameraSettingsForm,
       otherSettingsForm: this.otherSettingsForm,
     });
+  }
+
+  changeScene(scene: 'default' | 'glass-sphere-cube'): void {
+    const newScene = SceneFactory.createScene(scene);
+    this.initializeFormFromSceneDefaultSettings(newScene.defaultSettings);
+    this.emitScene.emit(newScene);
+    this.emitSettings.emit(newScene.defaultSettings);
   }
 
   resetSettings(): void {

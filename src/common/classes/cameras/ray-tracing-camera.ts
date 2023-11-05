@@ -1,4 +1,5 @@
 import { Observable, generate, map, asyncScheduler } from 'rxjs';
+import { Settings } from 'src/app/settings-panel/settings-panel.component';
 import { ICamera } from '../../interfaces/camera.interfce';
 import { IHittable } from '../../interfaces/hittable.interface';
 import { Color, Point3 } from '../../types/vec3.types';
@@ -10,9 +11,9 @@ import { IHitRecord } from '../../interfaces/hit-record.interface';
 import { degreesToRadians } from '../../utilities/math.util';
 
 export class RayTracingCamera implements ICamera<Observable<ImageData>> {
-  aspectRatio!: number;
+  aspectRatio: number = 16.0 / 9.0;
 
-  imageWidth!: number;
+  imageWidth: number = 1200;
 
   imageHeight!: number;
 
@@ -56,7 +57,7 @@ export class RayTracingCamera implements ICamera<Observable<ImageData>> {
 
   private defocusDiskV!: Vec3;
 
-  setSettings(settings: any): void {
+  setCameraSettings(settings: any): void {
     this.samplesPerPixel = settings.rayTracingSettings.samplesPerPixel;
     this.maxDepth = settings.rayTracingSettings.maxDepth;
 
@@ -68,6 +69,25 @@ export class RayTracingCamera implements ICamera<Observable<ImageData>> {
     this.skyBoxColor = settings.otherSettings.skyBoxColor.clone();
 
     this.initialize();
+  }
+
+  getCameraSettings(): Settings {
+    return {
+      rayTracingSettings: {
+        samplesPerPixel: this.samplesPerPixel,
+        maxDepth: this.maxDepth,
+      },
+      cameraSettings: {
+        vFov: this.vFov,
+        lookFrom: this.lookFrom.clone(),
+        lookAt: this.lookAt.clone(),
+        defocusAngle: this.defocusAngle,
+        focusDistance: this.focusDistance,
+      },
+      otherSettings: {
+        skyBoxColor: this.skyBoxColor.clone(),
+      },
+    };
   }
 
   initialize(): void {

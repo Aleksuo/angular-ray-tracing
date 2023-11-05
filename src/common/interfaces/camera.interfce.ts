@@ -5,6 +5,8 @@ export interface ICamera<T> {
   imageWidth: number;
   imageHeight: number;
   samplesPerPixel: number;
+  setCameraSettings: (settings: any) => void;
+  getCameraSettings: () => any;
   initialize(): void;
   render(world: IHittable): T;
 }
