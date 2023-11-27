@@ -1,11 +1,13 @@
 import { IHitRecord } from '../../interfaces/hit-record.interface';
-import { IHittable } from '../../interfaces/hittable.interface';
+import { HittableType, IHittable } from '../../interfaces/hittable.interface';
 import { HitRecord } from './hit-record';
 import { Interval } from '../utilities/interval';
 import { Ray } from '../utilities/ray';
 
 export class HittableList implements IHittable {
   objects: IHittable[];
+
+  type: HittableType = 'hittableList';
 
   constructor() {
     this.objects = [];

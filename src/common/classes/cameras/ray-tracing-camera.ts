@@ -1,5 +1,8 @@
 import { Observable, generate, map, asyncScheduler } from 'rxjs';
 import { Settings } from 'src/app/settings-panel/settings-panel.component';
+import { RayTracingWorkerDataInterface } from 'src/common/interfaces/ray-tracing-worker-data.interface';
+import { Injectable } from '@angular/core';
+import { RayTracingWorkerService } from 'src/common/services/ray-tracing-worker.service';
 import { ICamera } from '../../interfaces/camera.interfce';
 import { IHittable } from '../../interfaces/hittable.interface';
 import { Color, Point3 } from '../../types/vec3.types';
@@ -10,6 +13,9 @@ import { HitRecord } from '../hittables/hit-record';
 import { IHitRecord } from '../../interfaces/hit-record.interface';
 import { degreesToRadians } from '../../utilities/math.util';
 
+@Injectable({
+  providedIn: 'root',
+})
 export class RayTracingCamera implements ICamera<Observable<ImageData>> {
   aspectRatio: number = 16.0 / 9.0;
 
@@ -56,6 +62,8 @@ export class RayTracingCamera implements ICamera<Observable<ImageData>> {
   private defocusDiskU!: Vec3;
 
   private defocusDiskV!: Vec3;
+
+  constructor(private rayTracingWorkerService: RayTracingWorkerService) {}
 
   setCameraSettings(settings: any): void {
     this.samplesPerPixel = settings.rayTracingSettings.samplesPerPixel;
@@ -132,12 +140,35 @@ export class RayTracingCamera implements ICamera<Observable<ImageData>> {
   }
 
   render(world: IHittable): Observable<ImageData> {
-    return generate(
-      0,
-      (j) => j < this.imageHeight,
-      (j) => j + 1,
-      asyncScheduler,
-    ).pipe(map((j) => this.renderRow(j, world)));
+    const jobs: RayTracingWorkerDataInterface[] = [];
+    for (let j = 0; j < this.imageHeight; j += 1) {
+      const job: RayTracingWorkerDataInterface = {
+        rowIndex: j,
+        imageWidth: this.imageWidth,
+        samplesPerPixel: this.samplesPerPixel,
+        pixel00Location: this.pixel00Location,
+        defocusAngle: this.defocusAngle,
+        pixelDeltaU: this.pixelDeltaU.clone(),
+        pixelDeltaV: this.pixelDeltaV.clone(),
+        world,
+        center: this.center.clone(),
+        maxDepth: this.maxDepth,
+        defocusDiskU: this.defocusDiskU.clone(),
+        defocusDiskV: this.defocusDiskV.clone(),
+        skyBoxColor: this.skyBoxColor.clone(),
+        intensity: this.intensity,
+      };
+      jobs.push(job);
+    }
+    return this.rayTracingWorkerService.processData(jobs).pipe(
+      map(({ data }) => {
+        const startIndex = data.rowIndex * (4 * this.imageWidth);
+        for (let i = 0; i < 4 * this.imageWidth; i += 1) {
+          this.imgData.data[startIndex + i] = data.rowImgData[i];
+        }
+        return this.imgData;
+      }),
+    );
   }
 
   private renderRow(j: number, world: IHittable): ImageData {

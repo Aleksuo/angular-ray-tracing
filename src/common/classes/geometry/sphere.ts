@@ -1,5 +1,5 @@
 import { IHitRecord } from '../../interfaces/hit-record.interface';
-import { IHittable } from '../../interfaces/hittable.interface';
+import { HittableType, IHittable } from '../../interfaces/hittable.interface';
 import { Point3 } from '../../types/vec3.types';
 import { Ray } from '../utilities/ray';
 import { Interval } from '../utilities/interval';
@@ -11,6 +11,8 @@ export class Sphere implements IHittable {
   radius: number;
 
   material: IMaterial;
+
+  type: HittableType = 'sphere';
 
   constructor(center: Point3, radius: number, material: IMaterial) {
     this.center = center;

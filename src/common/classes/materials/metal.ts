@@ -1,5 +1,5 @@
 import { IHitRecord } from '../../interfaces/hit-record.interface';
-import { IMaterial } from '../../interfaces/material.interface';
+import { IMaterial, MaterialType } from '../../interfaces/material.interface';
 import { Ray } from '../utilities/ray';
 import { Vec3 } from '../utilities/vec3';
 import { Color } from '../../types/vec3.types';
@@ -8,6 +8,8 @@ export class Metal implements IMaterial {
   albedo: Color;
 
   fuzz: number;
+
+  type: MaterialType = 'metal';
 
   constructor(albedo: Color, fuzz = 1) {
     this.albedo = albedo;

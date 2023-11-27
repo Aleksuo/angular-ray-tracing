@@ -1,11 +1,13 @@
 import { IHitRecord } from '../../interfaces/hit-record.interface';
-import { IMaterial } from '../../interfaces/material.interface';
+import { IMaterial, MaterialType } from '../../interfaces/material.interface';
 import { Color } from '../../types/vec3.types';
 import { Ray } from '../utilities/ray';
 import { Vec3 } from '../utilities/vec3';
 
 export class Lambertian implements IMaterial {
   albedo: Color;
+
+  type: MaterialType = 'lambertian';
 
   constructor(albedo: Color) {
     this.albedo = albedo;

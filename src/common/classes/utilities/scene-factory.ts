@@ -1,5 +1,6 @@
 import { IMaterial } from 'src/common/interfaces/material.interface';
 import { randomRange } from 'src/common/utilities/math.util';
+import { RayTracingWorkerService } from 'src/common/services/ray-tracing-worker.service';
 import { RayTracingCamera } from '../cameras/ray-tracing-camera';
 import { Sphere } from '../geometry/sphere';
 import { HittableList } from '../hittables/hittable-list';
@@ -24,7 +25,7 @@ export class SceneFactory {
   }
 
   private static createDefaultScene() {
-    const camera = new RayTracingCamera();
+    const camera = new RayTracingCamera(new RayTracingWorkerService());
     const settings = {
       rayTracingSettings: {
         samplesPerPixel: 50,
@@ -89,7 +90,7 @@ export class SceneFactory {
   }
 
   private static createGlassSphereCubeScene() {
-    const camera = new RayTracingCamera();
+    const camera = new RayTracingCamera(new RayTracingWorkerService());
     const settings = {
       rayTracingSettings: {
         samplesPerPixel: 50,

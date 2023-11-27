@@ -1,3 +1,4 @@
+import { HittableType } from 'src/common/interfaces/hittable.interface';
 import { IHitRecord } from '../../interfaces/hit-record.interface';
 import { IMaterial } from '../../interfaces/material.interface';
 import { Ray } from '../utilities/ray';

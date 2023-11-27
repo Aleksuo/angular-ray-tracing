@@ -1,10 +1,12 @@
 import { IHitRecord } from '../../interfaces/hit-record.interface';
-import { IMaterial } from '../../interfaces/material.interface';
+import { IMaterial, MaterialType } from '../../interfaces/material.interface';
 import { Ray } from '../utilities/ray';
 import { Vec3 } from '../utilities/vec3';
 
 export class Dielectric implements IMaterial {
   ir: number;
+
+  type: MaterialType = 'dielectric';
 
   constructor(indexOfRefraction: number) {
     this.ir = indexOfRefraction;
