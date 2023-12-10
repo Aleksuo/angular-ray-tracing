@@ -1,4 +1,4 @@
-# AngularRayTracing
+# AngularRayTracing ![example workflow](https://github.com/aleksuo/angular-ray-tracing/actions/workflows/gh-pages.yml/badge.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Live demo at: [https://aleksuo.github.io/angular-ray-tracing/](https://aleksuo.github.io/angular-ray-tracing/)
 
