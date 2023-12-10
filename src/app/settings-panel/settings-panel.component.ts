@@ -6,6 +6,7 @@ import {
   Output,
 } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Marble } from 'src/common/classes/materials/marble';
 import { Scene } from 'src/common/classes/utilities/scene';
 import { SceneFactory } from 'src/common/classes/utilities/scene-factory';
 import { Vec3 } from 'src/common/classes/utilities/vec3';
@@ -71,10 +72,8 @@ export class SettingsPanelComponent implements OnInit {
 
   @Output() emitScene = new EventEmitter<Scene>();
 
-  selectedScene: FormControl<'default' | 'glass-sphere-cube'> = new FormControl(
-    'default',
-    { nonNullable: true },
-  );
+  selectedScene: FormControl<'default' | 'sphere-cube' | 'marble'> =
+    new FormControl('default', { nonNullable: true });
 
   mainForm: FormGroup = new FormGroup({});
 
@@ -151,7 +150,7 @@ export class SettingsPanelComponent implements OnInit {
     });
   }
 
-  changeScene(scene: 'default' | 'glass-sphere-cube'): void {
+  changeScene(scene: 'default' | 'sphere-cube' | 'marble'): void {
     const newScene = SceneFactory.createScene(scene);
     this.initializeFormFromSceneDefaultSettings(newScene.defaultSettings);
     this.emitScene.emit(newScene);

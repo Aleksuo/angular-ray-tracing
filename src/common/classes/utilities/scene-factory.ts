@@ -8,17 +8,20 @@ import { Lambertian } from '../materials/lambertian';
 import { Vec3 } from './vec3';
 import { Metal } from '../materials/metal';
 import { Dielectric } from '../materials/dielectric';
+import { Marble } from '../materials/marble';
 import { Scene } from './scene';
 
 export class SceneFactory {
   world: any;
 
-  static createScene(sceneType: 'default' | 'glass-sphere-cube') {
+  static createScene(sceneType: 'default' | 'sphere-cube' | 'marble') {
     switch (sceneType) {
       case 'default':
         return SceneFactory.createDefaultScene();
-      case 'glass-sphere-cube':
-        return SceneFactory.createGlassSphereCubeScene();
+      case 'sphere-cube':
+        return SceneFactory.createSphereCubeScene();
+      case 'marble':
+        return SceneFactory.createMarbleScene();
       default:
         throw new Error(`Scene type '${sceneType}' is not supported.`);
     }
@@ -89,15 +92,15 @@ export class SceneFactory {
     return new Scene(world, camera, settings);
   }
 
-  private static createGlassSphereCubeScene() {
+  private static createSphereCubeScene() {
     const camera = new RayTracingCamera(new RayTracingWorkerService());
     const settings = {
       rayTracingSettings: {
-        samplesPerPixel: 50,
-        maxDepth: 150,
+        samplesPerPixel: 100,
+        maxDepth: 50,
       },
       cameraSettings: {
-        vFov: 20,
+        vFov: 21,
         lookFrom: new Vec3(15, 10, 5),
         lookAt: new Vec3(0, 0, 0),
         vUp: new Vec3(0, 1, 0),
@@ -105,26 +108,77 @@ export class SceneFactory {
         focusDistance: 10,
       },
       otherSettings: {
-        skyBoxColor: new Vec3(0.2, 1.0, 0.2),
+        skyBoxColor: new Vec3(254 / 255, 247 / 255, 219 / 255),
       },
     };
 
     const world = new HittableList();
+    const materialGround = new Lambertian(
+      new Vec3(254 / 255, 247 / 255, 219 / 255),
+    );
+    world.add(new Sphere(new Vec3(0, -1000, -100), 1000, materialGround));
 
     for (let a = -2; a < 2; a += 1) {
       for (let b = -2; b < 2; b += 1) {
         for (let c = -2; c < 2; c += 1) {
           const center = new Vec3(a + 0.9, c + 0.9, b + 0.9);
-          if (a === 0 && b === 0 && c === 0) {
-            const sphereMaterial = new Lambertian(new Vec3(1.0, 0.0, 0.0));
-            world.add(new Sphere(center, 0.9, sphereMaterial));
-          } else {
-            const sphereMaterial = new Dielectric(1.5);
-            world.add(new Sphere(center, 0.9, sphereMaterial));
-          }
+          const albedo = Vec3.random().vectorMultiply(Vec3.random());
+          const sphereMaterial = new Lambertian(albedo);
+          world.add(new Sphere(center, 0.9, sphereMaterial));
         }
       }
     }
+    return new Scene(world, camera, settings);
+  }
+
+  private static createMarbleScene() {
+    const camera = new RayTracingCamera(new RayTracingWorkerService());
+    const settings = {
+      rayTracingSettings: {
+        samplesPerPixel: 150,
+        maxDepth: 15,
+      },
+      cameraSettings: {
+        vFov: 10,
+        lookFrom: new Vec3(10, 3, 35),
+        lookAt: new Vec3(0, 1, 0),
+        vUp: new Vec3(0, 1, 0),
+        defocusAngle: 0,
+        focusDistance: 10,
+      },
+      otherSettings: {
+        skyBoxColor: new Vec3(254 / 255, 247 / 255, 219 / 255),
+      },
+    };
+
+    const world = new HittableList();
+
+    const materialGround = new Lambertian(
+      new Vec3(254 / 255, 247 / 255, 219 / 255),
+    );
+    world.add(new Sphere(new Vec3(0, -1000, 0), 1000, materialGround));
+
+    const material1 = new Marble(
+      new Vec3(0.1, 0.1, 0.3),
+      new Vec3(0.5, 0.6, 0.4),
+      Math.random(),
+    );
+    world.add(new Sphere(new Vec3(0, 1, 0), 1.0, material1));
+
+    const material2 = new Marble(
+      new Vec3(0.4, 0.2, 0.1),
+      new Vec3(211 / 255, 211 / 255, 211 / 255),
+      Math.random(),
+    );
+    world.add(new Sphere(new Vec3(-4, 1, 0), 1.0, material2));
+
+    const material3 = new Marble(
+      new Vec3(0.4, 0.4, 0.4),
+      new Vec3(0.5, 0.6, 0.4),
+      Math.random(),
+    );
+    world.add(new Sphere(new Vec3(4, 1, 0), 1.0, material3));
+
     return new Scene(world, camera, settings);
   }
 }

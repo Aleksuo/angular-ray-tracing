@@ -24,6 +24,7 @@
     "@angular/router": "^16.2.2",
     "eslint-config-airbnb-typescript": "^17.1.0",
     "rxjs": "~7.5.0",
+    "simplex-noise": "^4.0.1",
     "tslib": "^2.3.0",
     "zone.js": "~0.13.1"
   },

@@ -5,6 +5,7 @@ import { HitRecord } from '../classes/hittables/hit-record';
 import { HittableList } from '../classes/hittables/hittable-list';
 import { Dielectric } from '../classes/materials/dielectric';
 import { Lambertian } from '../classes/materials/lambertian';
+import { Marble } from '../classes/materials/marble';
 import { Metal } from '../classes/materials/metal';
 import { Interval } from '../classes/utilities/interval';
 import { Ray } from '../classes/utilities/ray';
@@ -160,6 +161,9 @@ const returnMaterialPrototype = (obj: IMaterial): void => {
       break;
     case 'metal':
       Object.setPrototypeOf(obj, Metal.prototype);
+      break;
+    case 'marble':
+      Object.setPrototypeOf(obj, Marble.prototype);
       break;
     default:
       console.error(`Unsupported type: ${obj.type}`);

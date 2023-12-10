@@ -3,7 +3,7 @@ import { Ray } from '../classes/utilities/ray';
 import { IHitRecord } from './hit-record.interface';
 import { Color } from '../types/vec3.types';
 
-export type MaterialType = 'dielectric' | 'lambertian' | 'metal';
+export type MaterialType = 'dielectric' | 'lambertian' | 'metal' | 'marble';
 
 export interface IMaterial {
   type: MaterialType;
