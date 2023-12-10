@@ -96,13 +96,13 @@ export class SceneFactory {
     const camera = new RayTracingCamera(new RayTracingWorkerService());
     const settings = {
       rayTracingSettings: {
-        samplesPerPixel: 100,
+        samplesPerPixel: 150,
         maxDepth: 50,
       },
       cameraSettings: {
-        vFov: 21,
+        vFov: 30,
         lookFrom: new Vec3(15, 10, 5),
-        lookAt: new Vec3(0, 0, 0),
+        lookAt: new Vec3(0, -0.7, -0.5),
         vUp: new Vec3(0, 1, 0),
         defocusAngle: 0,
         focusDistance: 10,
@@ -116,12 +116,13 @@ export class SceneFactory {
     const materialGround = new Lambertian(
       new Vec3(254 / 255, 247 / 255, 219 / 255),
     );
-    world.add(new Sphere(new Vec3(0, -1000, -100), 1000, materialGround));
+    world.add(new Sphere(new Vec3(0, -1000, -97), 1000, materialGround));
 
     for (let a = -2; a < 2; a += 1) {
       for (let b = -2; b < 2; b += 1) {
         for (let c = -2; c < 2; c += 1) {
-          const center = new Vec3(a + 0.9, c + 0.9, b + 0.9);
+          const offset = 1.8;
+          const center = new Vec3(a * offset, c * offset, b * offset);
           const albedo = Vec3.random().vectorMultiply(Vec3.random());
           const sphereMaterial = new Lambertian(albedo);
           world.add(new Sphere(center, 0.9, sphereMaterial));
